@@ -162,6 +162,24 @@ require('lazy').setup({
   },
 
   {
+  'sbdchd/neoformat',
+  },
+
+  {
+    'nvim-tree/nvim-tree.lua',
+  },
+  
+  {'akinsho/toggleterm.nvim', version = "*", config = true},
+
+  {'lifepillar/vim-cheat40'},
+
+  {'mg979/vim-visual-multi'},
+
+  {
+    'nvim-tree/nvim-web-devicons'
+  },
+
+  {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
@@ -273,11 +291,54 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+vim.g.neoformat_try_node_exe = 1
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = {"*.js", "*.jsx", "*.ts", "*.tsx", "*.css", "*.json", "*.md"},
+    command = "Neoformat"
+})
+
+vim.api.nvim_set_keymap('n', '<C-b>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  view = {
+    width = 30,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+})
+
+
+require("toggleterm").setup{
+  open_mapping = [[<c-.>]],
+  direction = 'float'
+}
+
+vim.g.multi_cursor_start_word_key = '<C-n>'
+vim.g.multi_cursor_next_key = '<C-n>'
+vim.g.multi_cursor_prev_key = '<C-p>'
+vim.g.multi_cursor_skip_key = '<C-x>'
+vim.g.multi_cursor_quit_key = '<Esc>'
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
+vim.api.nvim_set_keymap('n', '<Space>ch', ':Cheat40<CR>', { noremap = true, silent = true })
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -601,6 +662,7 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
